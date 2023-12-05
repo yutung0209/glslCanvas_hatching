@@ -8,6 +8,7 @@ precision mediump float;
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
+uniform sampler2D u_tex0;
 
 // Created by inigo quilez - iq/2013
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
@@ -81,6 +82,14 @@ void main() {
     // feature points
     float dd = length( c.yz );
     color += vec3(1.)*(1.0-smoothstep( 0.0, 0.1, dd));
+    
+    // Sample the texture color
+    vec4 texColor = texture2D(u_tex0, st);
 
-    gl_FragColor = vec4(color,1.0);
+    // Combine texture color with Voronoi color
+    // This is an example of a simple mix, you might want to change the logic
+    vec3 combinedColor = mix(color, texColor.rgb, 0.524);
+
+    // Output the combined color
+    gl_FragColor = vec4(combinedColor, 1.0);
 }
